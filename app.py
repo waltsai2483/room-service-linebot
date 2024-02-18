@@ -86,11 +86,11 @@ def handle_message(event):
     elif '設定頻道' in event.message.text:
         code = int(event.message.text[5])
         try:
-            user = Personnel.query.filter_by(userid=event.source['userId']).first()
+            user = Personnel.query.filter_by(userid=event.source.user_id).first()
             if user is not None:
                 user.job_code = code
             else:
-                db.session.add(Personnel(event.source.source['userId'], line_bot_api.get_profile(event.source.source['userId']), code))
+                db.session.add(Personnel(event.source.user_id, line_bot_api.get_profile(event.source.user_id), code))
             db.session.commit()
         except LineBotApiError:
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text='無法'))

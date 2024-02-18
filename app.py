@@ -25,13 +25,13 @@ db.init_app(app)
 
 class Personnel(db.Model):
     __tablename__ = 'personnels'
-    line_id = db.Column(db.String(32), primary_key=True)
-    account_name = db.Column(db.String(20), nullable=False)
+    userid = db.Column(db.String(32), primary_key=True)
+    username = db.Column(db.String(20), nullable=False)
     job_code = db.Column(db.Integer, nullable=False)
 
     def __init__(self, id, name, job):
-        self.line_id = id
-        self.account_name = name
+        self.userid = id
+        self.username = name
         self.job_code = job
 
 

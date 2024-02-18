@@ -61,6 +61,7 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
+    print(event.source)
     if event.message.text == '[設定房務頻道]':
         line_bot_api.reply_message(event.reply_token, TemplateSendMessage(
             alt_text='請設定房務通知的頻道',

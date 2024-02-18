@@ -90,7 +90,7 @@ def handle_message(event):
             if user is not None:
                 user.job_code = code
             else:
-                db.session.add(Personnel(event.source.user_id, line_bot_api.get_profile(event.source.user_id), code))
+                db.session.add(Personnel(event.source.user_id, line_bot_api.get_profile(event.source.user_id).display_name, code))
             db.session.commit()
         except LineBotApiError:
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text='無法'))

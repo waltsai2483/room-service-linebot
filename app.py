@@ -61,7 +61,6 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    print(event.source)
     if event.message.text == '[設定房務頻道]':
         line_bot_api.reply_message(event.reply_token, TemplateSendMessage(
             alt_text='請設定房務通知的頻道',
@@ -87,11 +86,11 @@ def handle_message(event):
     elif '設定頻道' in event.message.text:
         code = int(event.message.text[5])
         try:
-            user = Personnel.query.filter_by(userid=event.source.userId).first()
+            user = Personnel.query.filter_by(userid=event.source['userId']).first()
             if user is not None:
                 user.job_code = code
             else:
-                db.session.add(Personnel(event.source.userId, line_bot_api.get_profile(event.source.userId), code))
+                db.session.add(Personnel(event.source.source['userId'], line_bot_api.get_profile(event.source.source['userId']), code))
             db.session.commit()
         except LineBotApiError:
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text='無法'))

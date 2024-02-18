@@ -61,6 +61,7 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     db.session.add(Personnel('dwa3erf', '蔡俊驊', 1))
+    db.session.commit()
     line_bot_api.reply_message(
         event.reply_token,
         TextSendMessage(text=event.message.text))

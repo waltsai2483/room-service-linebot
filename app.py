@@ -26,7 +26,7 @@ db.init_app(app)
 
 class Personnel(db.Model):
     __tablename__ = 'personnels'
-    userid = db.Column(db.String(32), primary_key=True)
+    userid = db.Column(db.String(33), primary_key=True)
     username = db.Column(db.String(20), nullable=False)
     job_code = db.Column(db.Integer, nullable=True)
 

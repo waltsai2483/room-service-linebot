@@ -1,4 +1,5 @@
 import os
+import urllib.parse
 
 from flask import Flask, request, abort
 from linebot import (
@@ -12,9 +13,10 @@ from linebot.models import (
 )
 
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.dialects.postgresql import insert
 
 db = SQLAlchemy()
+notify_client_id = os.getenv('LINE_NOTIFY_CLIENT_ID', None)
+notify_client_secret = os.getenv('LINE_NOTIFY_CLIENT_SECRET', None)
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
@@ -107,7 +109,15 @@ def handle_message(event):
                 db.session.add(
                     Personnel(event.source.user_id, line_bot_api.get_profile(event.source.user_id).display_name, code))
             db.session.commit()
-            line_bot_api.reply_message(event.reply_token, TextSendMessage(text='設定完成~'))
+
+            data = {
+                'response_type': 'code',
+                'client_id': notify_client_id,
+                'redirect_uri': 'https://room-service-linebot.onrender.com/callback/notify',
+                'scope': 'notify',
+                'state': event.source.user_id
+            }
+            line_bot_api.reply_message(event.reply_token, TextSendMessage(text=f'設定完成，初次設定請點選此連結完成Line Notify綁定: https://notify-bot.line.me/oauth/authorize?{urllib.parse.urlencode(data)}'))
         except LineBotApiError:
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text='設定頻道失敗!'))
     elif event.message.text == '[傳送客房通知]':
